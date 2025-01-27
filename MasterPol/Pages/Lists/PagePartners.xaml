@@ -1,0 +1,74 @@
+﻿<Page x:Class="MasterPol.Pages.Lists.PagePartners"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MasterPol.Pages.Lists"
+      xmlns:converter="clr-namespace:MasterPol.AppData.DbMethods"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Partners">
+    <Page.Resources>
+        <converter:PhoneConverter x:Key="phoneConverter"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <TextBox x:Name="tbSearch" TextChanged="tbSearch_TextChanged" Width="120" Margin="5"/>
+            <ComboBox x:Name="cbSort" Width="100" Margin="5" SelectedIndex="0" SelectionChanged="cbSort_SelectionChanged">
+                <ComboBoxItem Content="Сортировка"/>
+                <ComboBoxItem Content="Наименования А-Я"/>
+                <ComboBoxItem Content="Наименования Я-А"/>
+                <ComboBoxItem Content="Рейтинг возрастание"/>
+                <ComboBoxItem Content="Рейтинг убывание"/>
+            </ComboBox>
+            <ComboBox x:Name="cbFilter" Width="100" Margin="5" SelectedIndex="0" SelectionChanged="cbFilter_SelectionChanged">
+                <ComboBoxItem Content="Фильтрация"/>
+                <ComboBoxItem Content="ЗАО"/>
+                <ComboBoxItem Content="ООО"/>
+                <ComboBoxItem Content="ПАО"/>
+                <ComboBoxItem Content="ОАО"/>
+            </ComboBox>
+            <Button x:Name="btnAddPartner" Content="Добавить" Width="100" Margin="5" Click="btnAddPartner_Click"/>
+            <Button x:Name="btnEditPartner" Content="Редактировать" Width="100" Margin="5" Click="btnEditPartner_Click"/>
+            <Button x:Name="btnDeletePartner" Content="Удалить" Width="100" Margin="5" Click="btnDeletePartner_Click"/>
+        </StackPanel>
+        <ListView x:Name="listPartners" Grid.Row="1" ScrollViewer.CanContentScroll="False">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="600"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Left">
+                            <TextBlock TextWrapping="Wrap" FontSize="16" FontWeight="Bold">
+                                <Run Text="{Binding p_name}"/>
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="{Binding Path=phone, Converter={StaticResource phoneConverter}}"/>
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="{Binding AddType, Mode=OneWay}"/>
+                            </TextBlock>
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text="{Binding AddCount, Mode=OneWay}"/>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <TextBlock TextWrapping="Wrap">
+                                <Run Text=""/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <TextBlock x:Name="tbCounter" Grid.Row="2" VerticalAlignment="Center"/>
+    </Grid>
+</Page>
