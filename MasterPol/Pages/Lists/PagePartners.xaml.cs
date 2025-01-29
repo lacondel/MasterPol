@@ -27,23 +27,29 @@ namespace MasterPol.Pages.Lists
         {
             InitializeComponent();
             UpdateUiBasedOnUserRole();
-            List<partners> p = AppConnect.model0db.partners.ToList();
+            LoadFilterOptions();
+            List<partners> partner = AppConnect.model0db.partners.ToList();
 
-            if (p.Count > 0)
+            if (partner.Count > 0)
             {
-                tbCounter.Text = "Найдено " + p.Count + " партнёров"; 
+                tbCounter.Text = "Найдено " + partner.Count + " партнёров"; 
             }
-            listPartners.ItemsSource = p;
+            listPartners.ItemsSource = partner;
         }
 
         partners[] PartnerSearch()
         {
             var partner = AppConnect.model0db.partners.ToList();
 
-            if (tbSearch != null)
+            if (!string.IsNullOrWhiteSpace(tbSearch.Text))
             {
-                partner = partner.Where(p => p.p_name.ToLowerInvariant().Contains(tbSearch.Text.ToLowerInvariant()) ||
-                    Regex.Replace(p.phone, @"[+\-\s()]", "").Contains(Regex.Replace(tbSearch.Text, @"[+\-\s()]", ""))).ToList();
+                string searchText = tbSearch.Text.Trim().ToLowerInvariant();
+                string cleanedSearchText = Regex.Replace(searchText, @"[+\-\s()]", "");
+
+                partner = partner.Where(p =>
+                    p.p_name.ToLowerInvariant().Contains(searchText) ||
+                    (!string.IsNullOrEmpty(p.phone) && !string.IsNullOrEmpty(cleanedSearchText) && Regex.Replace(p.phone, @"[+\-\s()]", "").Contains(cleanedSearchText))
+                ).ToList();
             }
 
             if (cbFilter != null && cbFilter.SelectedIndex > 0)
@@ -159,7 +165,7 @@ namespace MasterPol.Pages.Lists
 
         private void btnDeletePartner_Click(object sender, RoutedEventArgs e)
         {
-            if (listPartners == null)
+            if (listPartners.SelectedItem == null)
             {
                 MessageBox.Show("Выберите партнёра для удаления.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
@@ -185,14 +191,36 @@ namespace MasterPol.Pages.Lists
                             context.partners.Remove(partnerToDelete);
                             context.SaveChanges();
                         }
-                        listPartners.ItemsSource = PartnerSearch();
                         MessageBox.Show("Партнёр успешно удалён.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
+                        listPartners.ItemsSource = PartnerSearch();
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Ошибка при удалении:\n{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+            }
+        }
+
+        private void LoadFilterOptions()
+        {
+            try
+            {
+                using (var context = new MasterPolEntities())
+                {
+                    var partnerTypes = context.partner_types.Select(p => p.pat_name).ToList();
+
+                    cbFilter.Items.Add("Фильтрация");
+
+                    foreach(var type in partnerTypes)
+                    {
+                        cbFilter.Items.Add(type);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки фильтров:\n{ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

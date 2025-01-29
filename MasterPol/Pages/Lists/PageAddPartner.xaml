@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:MasterPol.Pages.Lists"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AddPartner">
+      Title="Add Partner">
 
     <Grid>
         <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

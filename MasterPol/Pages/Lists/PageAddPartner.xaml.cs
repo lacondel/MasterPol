@@ -37,20 +37,25 @@ namespace MasterPol.Pages.Lists
             {
                 using (var context = new MasterPolEntities())
                 {
+                    var selectedTypeItem = addPartnerType.SelectedItem as ComboBoxItem;
+                    string selectedTypeName = selectedTypeItem.Content.ToString();
+                    var selectedType = AppConnect.model0db.partner_types.FirstOrDefault(p => p.pat_name == selectedTypeName);
+
                     partners newPartner = new partners
                     {
                         p_name = addPartnerName.Text,
-                        id_pat = addPartnerType.SelectedIndex,
+                        id_pat = selectedType.id_pat,
                         director = addDirector.Text,
                         email = addEmail.Text,
+                        phone = addPhone.Text,
                         address = addAddress.Text,
-                        INN = Int32.Parse(addINN.Text),
-                        rating = int.Parse(addRating.Text),
+                        INN = decimal.TryParse(addINN.Text, out decimal innValue) ? (decimal?)innValue : null,
+                        rating = Int32.Parse(addRating.Text),
                     };
                     context.partners.Add(newPartner);
                     context.SaveChanges();
                     MessageBox.Show("Партнёр успешно добавлен!", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
-                    AppFrame.frmMain.GoBack();
+                    AppFrame.frmMain.Navigate(new PagePartners());
                 }
             }
             catch (Exception ex)

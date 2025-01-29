@@ -27,13 +27,7 @@
                 <ComboBoxItem Content="Рейтинг возрастание"/>
                 <ComboBoxItem Content="Рейтинг убывание"/>
             </ComboBox>
-            <ComboBox x:Name="cbFilter" Width="100" Margin="5" SelectedIndex="0" SelectionChanged="cbFilter_SelectionChanged">
-                <ComboBoxItem Content="Фильтрация"/>
-                <ComboBoxItem Content="ЗАО"/>
-                <ComboBoxItem Content="ООО"/>
-                <ComboBoxItem Content="ПАО"/>
-                <ComboBoxItem Content="ОАО"/>
-            </ComboBox>
+            <ComboBox x:Name="cbFilter" Width="100" Margin="5" SelectedIndex="0" SelectionChanged="cbFilter_SelectionChanged"/>
             <Button x:Name="btnAddPartner" Content="Добавить" Width="100" Margin="5" Click="btnAddPartner_Click"/>
             <Button x:Name="btnEditPartner" Content="Редактировать" Width="100" Margin="5" Click="btnEditPartner_Click"/>
             <Button x:Name="btnDeletePartner" Content="Удалить" Width="100" Margin="5" Click="btnDeletePartner_Click"/>
